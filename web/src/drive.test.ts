@@ -1,0 +1,3 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{driveListing}from'./drive.ts';
+test('uses actual Quantum files/folders listing and scoped relative paths',()=>{const rows=driveListing({type:'directory',folders:[{name:'Reports',type:'directory'}],files:[{name:'quarter.pdf',type:'application/pdf'}]},'/Documents');assert.deepEqual(rows.map(x=>x.path),['/Documents/Reports','/Documents/quarter.pdf']);assert.equal(rows[0].type,'directory')});
+test('rejects unsafe child paths and non-directory API responses',()=>{assert.throws(()=>driveListing({type:'directory',files:[{name:'../private.pdf'}]},'/'));assert.throws(()=>driveListing({items:[]},'/'))});

@@ -7,7 +7,7 @@
     "generate": "node scripts/generate.mjs",
     "dev": "vite --host 127.0.0.1",
     "build": "npm run generate && tsc --noEmit && vite build",
-    "test": "node --test scripts/shell.test.mjs src/image-bounds.test.ts",
+    "test": "node --test scripts/shell.test.mjs src/image-bounds.test.ts src/drive.test.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
