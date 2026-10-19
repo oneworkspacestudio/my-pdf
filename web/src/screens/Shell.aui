@@ -21,7 +21,8 @@ Page Shell
         Link href=$searchURL "Search Workspace"
       Button variant=icon action=theme aria-label="Toggle color theme"
         Icon name=SunMoon
-      Button variant=secondary action=apps "Apps"
+      If condition=$workspace
+        Button variant=secondary action=apps "Apps"
       Text $user.name
       Button variant=secondary action=logout "Sign out"
     Stack variant=content

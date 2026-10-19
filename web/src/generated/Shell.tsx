@@ -30,7 +30,9 @@ export function Shell({ data, onAction }: { data: any; onAction: (name: string) 
             <Link href={data.searchURL}>Search Workspace</Link>
           )}
           <Button variant="icon" onClick={() => onAction("theme")} aria-label="Toggle color theme"><Icon name="SunMoon" /></Button>
-          <Button variant="secondary" onClick={() => onAction("apps")}>Apps</Button>
+          {data.workspace && (
+            <Button variant="secondary" onClick={() => onAction("apps")}>Apps</Button>
+          )}
           <Text>{data.user.name}</Text>
           <Button variant="secondary" onClick={() => onAction("logout")}>Sign out</Button>
         </Row>

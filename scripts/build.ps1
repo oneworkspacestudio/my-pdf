@@ -1,5 +1,5 @@
 #requires -Version 7.0
-param([string]$Go='go',[string]$Npm='npm.cmd',[string]$Version='0.1.0-preview.1',[string]$Output='', [switch]$ReuseDependencies,[switch]$Release)
+param([string]$Go='go',[string]$Npm='npm.cmd',[string]$Version='0.1.0-preview.2',[string]$Output='', [switch]$ReuseDependencies,[switch]$Release)
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $contract=Get-Content -LiteralPath (Join-Path $root 'compatibility.json') -Raw|ConvertFrom-Json
