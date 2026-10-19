@@ -11,3 +11,17 @@ Release build script demands a clean commit, regenerates UI/icon, runs tests/vet
 Standalone native Chrome/mobile flow and all four encrypted backup/restores passed. Managed native install at disposable localhost:29xxx passed 18 scripted checks including single MyAccounts login, every new app plus Drive/Notes, real Drive/PDF import/save-copy, live Monitor discovery/status privacy, real federated results/HTML safety, moved/deleted files, second-user viewer sharing/revocation and non-owner Monitor denial, full app-cookie logout. Native verified updater transaction restarted all processes successfully. Actual API mismatch in PDF picker (Quantum files/folders vs assumed items) fixed with contract test. Shared Go full tests/vet passed again. Final publication pending; see acceptance docs for explicit non-gates and audit limitations. No owner data used.
 
 Final foundation pin advances to b1c1f801ccb2 (public pseudo-version), adding authenticated response-account headers, optional expected-account mutation validation and bounded body-read time. Client fields, late requests, downloads and auth generations are cleared/guarded across account changes. Added same-SPA two-user draft regression. Actual preview.36 ->37 new-controller upgrade added all four defaults; Notes separate group upgrade then full end-to-end checks passed. Old public-controller bridge remains a post-publication verification gate because it requires the exact published manager/catalog digest. All four source vulnerability scans show no reachable/imported-package findings; module-only findings and inherited Notes advisory remain explicit.
+
+## Published
+
+Published https://github.com/oneworkspacestudio/my-pdf/releases/tag/v0.1.0-preview.1
+from the final committed source recorded in build-info.json. Every uploaded asset
+size and GitHub SHA256 digest matches its local release file. Includes native EXE,
+ZIP, update manifest, checksums, full notices, dependency/compatibility metadata.
+Final two standalone Chrome checks per app and all eighteen managed suite checks
+passed after the final SDK/client account-binding fixes. No Actions. Suite main
+767a9cf pins actual published ZIP digests and Notes preview.5; suite37 packaging
+follows. Postpublication old-controller bridge check and C fixture cleanup are
+recorded in the suite handoff, not implied complete here. Source/binaries remain
+on I:; owner data was not used. Release remains unsigned preview with explicit
+clean-host/reboot/SCM/security and feature limits in documentation.
