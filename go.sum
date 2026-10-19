@@ -22,8 +22,8 @@ github.com/mattn/go-runewidth v0.0.30 h1:+KUuiDA4fF0R1p5FeueHefjDm+GIM+kWfFnDjyb
 github.com/mattn/go-runewidth v0.0.30/go.mod h1:3qAiGCV4Koz/yuveO58qUefmUTRm8r0IGEXZ9jeHp/8=
 github.com/ncruces/go-strftime v1.0.0 h1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w=
 github.com/ncruces/go-strftime v1.0.0/go.mod h1:Fwc5htZGVVkseilnfgOVb9mKy6w1naJmn9CehxcKcls=
-github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261018235801-c940d4319d21 h1:PAp+QYtLB86577tMoG83vBxmBYfGvAoBViLZuxmGEDQ=
-github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261018235801-c940d4319d21/go.mod h1:D2RuMnd81S3vJxh4KDfANVAad73EpiqZF7kba5q6pw4=
+github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261019010903-b1c1f801ccb2 h1:y/syrPnPFKjkgeRUBFiGFHKZZ0nDIjiLssrf4PDz8sw=
+github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261019010903-b1c1f801ccb2/go.mod h1:D2RuMnd81S3vJxh4KDfANVAad73EpiqZF7kba5q6pw4=
 github.com/pdfcpu/pdfcpu v0.16.2 h1:x6Y+jOn4Ieu3TZ+B3eNgjS9aLsybm3azz6pEMiZfE2Q=
 github.com/pdfcpu/pdfcpu v0.16.2/go.mod h1:QcoG3vO7d8MllF6JHsXvMUTYKlLTxAmuc12GFABoqPA=
 github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=

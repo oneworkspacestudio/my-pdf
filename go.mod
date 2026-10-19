@@ -3,7 +3,7 @@ module github.com/oneworkspacestudio/my-pdf
 go 1.27.2
 
 require (
-	github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261018235801-c940d4319d21
+	github.com/oneworkspacestudio/one-workspace v0.3.0-preview.36.0.20261019010903-b1c1f801ccb2
 	github.com/pdfcpu/pdfcpu v0.16.2
 )
 
