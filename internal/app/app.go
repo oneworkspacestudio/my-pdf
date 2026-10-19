@@ -28,18 +28,20 @@ type App struct {
 	wake      chan struct{}
 }
 type Document struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Hash    string `json:"-"`
-	Size    int64  `json:"size"`
-	Created string `json:"created"`
+	ID      string    `json:"id"`
+	Name    string    `json:"name"`
+	Hash    string    `json:"-"`
+	Size    int64     `json:"size"`
+	Created string    `json:"created"`
+	Drive   DriveSave `json:"drive"`
 }
 type Request struct {
-	Operation string   `json:"operation"`
-	Documents []string `json:"documents"`
-	Pages     []string `json:"pages"`
-	Rotation  int      `json:"rotation"`
-	Password  string   `json:"password,omitempty"`
+	Operation   string   `json:"operation"`
+	Documents   []string `json:"documents"`
+	Pages       []string `json:"pages"`
+	Rotation    int      `json:"rotation"`
+	Password    string   `json:"password,omitempty"`
+	SaveToDrive bool     `json:"saveToDrive,omitempty"`
 }
 type Job struct {
 	ID            string          `json:"id"`
@@ -54,7 +56,16 @@ type Job struct {
 }
 
 func New(h *apphost.Host) (*App, error) {
-	if e := h.Migrate(1, `CREATE TABLE pdf_documents(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,name TEXT NOT NULL,hash TEXT NOT NULL,size INTEGER NOT NULL,created TEXT NOT NULL); CREATE INDEX pdf_owner ON pdf_documents(user_id); CREATE TABLE pdf_annotations(document_id TEXT PRIMARY KEY REFERENCES pdf_documents(id) ON DELETE CASCADE,value TEXT NOT NULL); CREATE TABLE pdf_artifacts(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,hash TEXT NOT NULL,size INTEGER NOT NULL); CREATE TABLE pdf_jobs(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,operation TEXT NOT NULL,state TEXT NOT NULL,message TEXT NOT NULL,result TEXT NOT NULL DEFAULT '',created TEXT NOT NULL,finished TEXT NOT NULL DEFAULT '',metadata TEXT NOT NULL DEFAULT '{}');`); e != nil {
+	var schemaVersion int
+	if e := h.DB.QueryRow("SELECT coalesce(max(version),0) FROM host_migrations").Scan(&schemaVersion); e != nil {
+		return nil, e
+	}
+	if schemaVersion < 1 {
+		if e := h.Migrate(1, `CREATE TABLE pdf_documents(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,name TEXT NOT NULL,hash TEXT NOT NULL,size INTEGER NOT NULL,created TEXT NOT NULL); CREATE INDEX pdf_owner ON pdf_documents(user_id); CREATE TABLE pdf_annotations(document_id TEXT PRIMARY KEY REFERENCES pdf_documents(id) ON DELETE CASCADE,value TEXT NOT NULL); CREATE TABLE pdf_artifacts(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,hash TEXT NOT NULL,size INTEGER NOT NULL); CREATE TABLE pdf_jobs(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,operation TEXT NOT NULL,state TEXT NOT NULL,message TEXT NOT NULL,result TEXT NOT NULL DEFAULT '',created TEXT NOT NULL,finished TEXT NOT NULL DEFAULT '',metadata TEXT NOT NULL DEFAULT '{}');`); e != nil {
+			return nil, e
+		}
+	}
+	if e := h.Migrate(2, `CREATE TABLE pdf_drive(document_id TEXT PRIMARY KEY REFERENCES pdf_documents(id) ON DELETE CASCADE,state TEXT NOT NULL,source TEXT NOT NULL DEFAULT '',path TEXT NOT NULL DEFAULT '',message TEXT NOT NULL DEFAULT '',lease TEXT NOT NULL DEFAULT '',expires INTEGER NOT NULL DEFAULT 0);`); e != nil {
 		return nil, e
 	}
 	h.DB.Exec("UPDATE pdf_jobs SET state='cancelled',message='Interrupted by restart; original files are unchanged' WHERE state IN('queued','processing')")
@@ -68,6 +79,7 @@ func New(h *apphost.Host) (*App, error) {
 	m.HandleFunc("GET /api/documents/{id}/annotations", h.Require(a.annotations))
 	m.HandleFunc("PUT /api/documents/{id}/annotations", h.Require(a.annotations))
 	m.HandleFunc("DELETE /api/documents/{id}", h.Require(a.delete))
+	m.HandleFunc("POST /api/documents/{id}/drive-save", h.Require(a.driveSave))
 	m.HandleFunc("POST /api/jobs", h.Require(a.createJob))
 	m.HandleFunc("DELETE /api/artifacts/{id}", h.Require(a.deleteArtifact))
 	m.HandleFunc("GET /api/artifacts/{id}", h.Require(a.artifact))
@@ -80,7 +92,7 @@ func (a *App) doc(user, id string) (d Document, e error) {
 	return
 }
 func (a *App) documents(w http.ResponseWriter, r *http.Request) {
-	rows, e := a.H.DB.Query("SELECT id,name,size,created FROM pdf_documents WHERE user_id=? ORDER BY created DESC LIMIT 500", apphost.Current(r).User.ID)
+	rows, e := a.H.DB.Query("SELECT d.id,d.name,d.size,d.created,COALESCE(s.state,'local'),COALESCE(s.source,''),COALESCE(s.path,''),COALESCE(s.message,'') FROM pdf_documents d LEFT JOIN pdf_drive s ON s.document_id=d.id WHERE d.user_id=? ORDER BY d.created DESC LIMIT 500", apphost.Current(r).User.ID)
 	if e != nil {
 		a.H.DBError(w, e)
 		return
@@ -89,7 +101,7 @@ func (a *App) documents(w http.ResponseWriter, r *http.Request) {
 	out := []Document{}
 	for rows.Next() {
 		var d Document
-		if e = rows.Scan(&d.ID, &d.Name, &d.Size, &d.Created); e != nil {
+		if e = rows.Scan(&d.ID, &d.Name, &d.Size, &d.Created, &d.Drive.State, &d.Drive.Source, &d.Drive.Path, &d.Drive.Message); e != nil {
 			a.H.DBError(w, e)
 			return
 		}
@@ -130,7 +142,20 @@ func (a *App) upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d := Document{ID: apphost.ID(), Name: name, Hash: hash, Size: size, Created: time.Now().UTC().Format(time.RFC3339Nano)}
-	_, e = a.H.DB.Exec("INSERT INTO pdf_documents VALUES(?,?,?,?,?,?)", d.ID, apphost.Current(r).User.ID, d.Name, d.Hash, d.Size, d.Created)
+	tx, e := a.H.DB.Begin()
+	if e != nil {
+		a.H.DBError(w, e)
+		return
+	}
+	defer tx.Rollback()
+	_, e = tx.Exec("INSERT INTO pdf_documents VALUES(?,?,?,?,?,?)", d.ID, apphost.Current(r).User.ID, d.Name, d.Hash, d.Size, d.Created)
+	if e == nil && r.Header.Get("X-Save-To-Drive") == "true" {
+		_, e = tx.Exec("INSERT INTO pdf_drive(document_id,state) VALUES(?,'pending')", d.ID)
+		d.Drive.State = "pending"
+	}
+	if e == nil {
+		e = tx.Commit()
+	}
 	if e != nil {
 		a.H.DBError(w, e)
 		return
@@ -425,6 +450,9 @@ func (a *App) process(parent context.Context, id string, in Request) {
 			_, e = tx.Exec("INSERT INTO pdf_artifacts VALUES(?,?,?,?)", result, owner, hash, size)
 		} else {
 			_, e = tx.Exec("INSERT INTO pdf_documents VALUES(?,?,?,?,?,?)", result, owner, "processed-"+in.Operation+".pdf", hash, size, time.Now().UTC().Format(time.RFC3339Nano))
+			if e == nil && in.SaveToDrive {
+				_, e = tx.Exec("INSERT INTO pdf_drive(document_id,state) VALUES(?,'pending')", result)
+			}
 		}
 		if e != nil {
 			tx.Rollback()

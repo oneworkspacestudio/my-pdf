@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var version = "0.1.0-preview.2"
+var version = "0.1.0-preview.3"
 
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--worker" {

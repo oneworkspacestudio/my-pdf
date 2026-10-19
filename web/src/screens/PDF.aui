@@ -7,6 +7,11 @@ Page PDF
   Field label="Choose PDF, PNG or JPEG files (PDF limit 100 MiB; workspace storage 1 GiB per account)"
     Input name=uploads type=file multiple=true accept="application/pdf,image/png,image/jpeg"
   Alert "Original files are preserved. Annotations and drawing a signature do not create a cryptographically signed PDF. Processed copies can invalidate existing signatures."
+  Text $storageText
+  If condition=$managed
+    Checkbox name=autoDrive "Save new uploads and processed PDFs to Drive automatically"
+  If condition=$saveStatus
+    Alert $saveStatus
   If condition=$exporting
     Button variant=secondary action=cancelExport cancel=true "Cancel browser export"
   If condition=$viewing
@@ -73,7 +78,12 @@ Page PDF
           Button variant=secondary item=$item.id action=select $item.selection
           Link href=$item.href $item.name
           Text variant=caption $item.sizeLabel
+          Text variant=caption $item.driveLabel
           Button variant=secondary item=$item.id action=open "Open"
+          If condition=$item.canSaveDrive
+            Button variant=secondary item=$item.id action=queueDrive "Save to Drive"
+          If condition=$item.canRetryDrive
+            Button variant=secondary item=$item.id action=retryDrive "Retry Drive save"
           Button variant=secondary item=$item.id action=removeDocument "Remove"
     Card
       Heading level=2 "Tools"

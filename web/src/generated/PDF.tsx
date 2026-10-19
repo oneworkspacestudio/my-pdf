@@ -1,5 +1,5 @@
 // Generated from screens/PDF.aui; edit the AUI source.
-import { Alert, Badge, Button, Card, Field, Grid, Heading, Image, Input, Link, Page, Row, Section, Select, Spacer, Spinner, Stack, Text } from "@/components/ui"
+import { Alert, Badge, Button, Card, Checkbox, Field, Grid, Heading, Image, Input, Link, Page, Row, Section, Select, Spacer, Spinner, Stack, Text } from "@/components/ui"
 
 export function PDF({ data, onAction }: { data: any; onAction: (name: string) => void }) {
   return (
@@ -12,6 +12,13 @@ export function PDF({ data, onAction }: { data: any; onAction: (name: string) =>
       </Row>
       <Field label="Choose PDF, PNG or JPEG files (PDF limit 100 MiB; workspace storage 1 GiB per account)"><Input name="uploads" type="file" multiple={true} accept="application/pdf,image/png,image/jpeg" /></Field>
       <Alert>Original files are preserved. Annotations and drawing a signature do not create a cryptographically signed PDF. Processed copies can invalidate existing signatures.</Alert>
+      <Text>{data.storageText}</Text>
+      {data.managed && (
+        <Checkbox name="autoDrive">Save new uploads and processed PDFs to Drive automatically</Checkbox>
+      )}
+      {data.saveStatus && (
+        <Alert>{data.saveStatus}</Alert>
+      )}
       {data.exporting && (
         <Button variant="secondary" onClick={() => onAction("cancelExport")} cancel={true}>Cancel browser export</Button>
       )}
@@ -86,7 +93,14 @@ export function PDF({ data, onAction }: { data: any; onAction: (name: string) =>
               <Button variant="secondary" item={item.id} onClick={() => onAction("select")}>{item.selection}</Button>
               <Link href={item.href}>{item.name}</Link>
               <Text variant="caption">{item.sizeLabel}</Text>
+              <Text variant="caption">{item.driveLabel}</Text>
               <Button variant="secondary" item={item.id} onClick={() => onAction("open")}>Open</Button>
+              {item.canSaveDrive && (
+                <Button variant="secondary" item={item.id} onClick={() => onAction("queueDrive")}>Save to Drive</Button>
+              )}
+              {item.canRetryDrive && (
+                <Button variant="secondary" item={item.id} onClick={() => onAction("retryDrive")}>Retry Drive save</Button>
+              )}
               <Button variant="secondary" item={item.id} onClick={() => onAction("removeDocument")}>Remove</Button>
             </Row>
           ))}

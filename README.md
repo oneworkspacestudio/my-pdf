@@ -8,13 +8,28 @@ View, annotate and process PDF copies on your own server. An original Apache-2.0
 
 ## Windows download
 
-Download the Windows x64 ZIP from [Releases](https://github.com/oneworkspacestudio/my-pdf/releases). Verify SHA256SUMS.txt, extract to a program folder and run **MyPDF.exe**. No Docker, WSL, Node.js or Python is needed at runtime. A modern browser and a dedicated **NTFS** data folder are required. This is a **0.1.0-preview.1** release; unsigned Windows executables may prompt for trust.
+Download the Windows x64 ZIP from [Releases](https://github.com/oneworkspacestudio/my-pdf/releases). Verify SHA256SUMS.txt, extract to a program folder and run **MyPDF.exe**. No Docker, WSL, Node.js or Python is needed at runtime. A modern browser and a dedicated **NTFS** data folder are required. This is a **0.1.0-preview.3** release; unsigned Windows executables may prompt for trust.
 
 The simplest managed installation is [One Workspace](https://github.com/oneworkspacestudio/one-workspace). New default apps are installed during manager updates unless explicitly excluded. Existing app data and user files are preserved.
 
 ## Included
 
 PDF.js viewer with thumbnails, zoom, find, text extraction and page PNG; native merge, split ZIP, extract/reorder, remove/blank pages, rotation, lossless optimisation and metadata inspection/removal; images to PDF, watermark and page numbers; text, shapes, highlights, ink, comments and signature images; permanent raster redaction; approved Drive import and save-copy.
+
+### Saving to Drive
+
+When opened through One Workspace, new PDF uploads, image conversions and processed
+PDF copies automatically save as ordinary files in **Drive / My PDF**. Keep My PDF
+open until each document says **Saved to Drive**; its destination is shown beside
+the document. Existing filenames get `(1)`, `(2)`, etc. and are never overwritten.
+Turn off the automatic-save checkbox to keep new documents in the private library.
+
+Older library documents and imports have a **Save to Drive** button. **Retry Drive
+save** resumes a failed transfer; pending saves survive reloads and reconnect with
+your existing MyAccounts sign-in. **Save selected copy to Drive** lets you choose a
+different folder/name. Editable drawing marks stay in My PDF until you create an
+annotated copy. Split ZIPs and page PNG/text downloads are separate downloads.
+Standalone mode keeps files in My PDF and does not claim a Drive save.
 
 ## Standalone
 
