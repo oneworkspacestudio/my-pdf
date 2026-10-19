@@ -16,3 +16,5 @@ dialog.card--dialog{margin:0;border:1px solid var(--line);background:var(--surfa
 @media(max-width:600px){.row--task{flex-wrap:wrap}.row--task>.stack{flex-basis:calc(100% - 110px)}.stack--content{overflow-wrap:anywhere}.row--brand{flex-shrink:0}}
 
 .stack--content{margin:0 auto}
+
+@media(min-width:801px){.stack--sidebar{padding-bottom:76px}}
