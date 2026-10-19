@@ -1,0 +1,21 @@
+Page Settings
+  Card
+    Heading level=1 "Settings & backup"
+    Text "Encrypted backups include this app's database and stored files. Restore into a new, empty NTFS data folder using the executable's --restore command. Existing data is never overwritten."
+    Field label="Backup password (8–128 bytes)"
+      Input name=backupPassword type=password
+    Button action=backup "Download encrypted backup"
+    Text variant=caption "Keep this password separately. It cannot be recovered. Central Workspace backups also include this app when installed."
+  If condition=$localOwner
+    Card
+      Heading level=2 "Add a standalone user"
+      Field label="User email"
+        Input name=memberEmail type=email
+      Field label="Initial password"
+        Input name=memberPassword type=password
+      Button action=member "Create user"
+  Card
+    Text $versionText
+    Text $identityText
+    For each=$appLinks
+      Link href=$item.href $item.title

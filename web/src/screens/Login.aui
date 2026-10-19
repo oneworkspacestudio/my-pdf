@@ -1,0 +1,16 @@
+Page Login
+  Card variant=login
+    Image src=$logo alt=$name width=80 height=80
+    Heading level=1 $name
+    Text $loginText
+    If condition=$error
+      Alert tone=error $error
+    If condition=$oidc
+      Link href=$loginURL variant=button "Continue with MyAccounts"
+    Else
+      Field label="Email address"
+        Input name=email type=email autoComplete=username
+      Field label="Password"
+        Input name=password type=password autoComplete=current-password
+      Button action=login $loginButton
+    Link href=$workspace "One Workspace"

@@ -1,0 +1,17 @@
+{
+  "name": "My PDF \u00b7 One Workspace",
+  "short_name": "My PDF",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#345de5",
+  "background_color": "#f5f7fc",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

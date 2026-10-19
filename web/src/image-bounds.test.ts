@@ -1,0 +1,3 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{imageBounds}from'./image-bounds.ts';
+test('rejects huge PNG dimensions before decode',()=>{const b=new Uint8Array(24),v=new DataView(b.buffer);v.setUint32(0,0x89504e47);v.setUint32(4,0x0d0a1a0a);v.setUint32(16,100000);v.setUint32(20,100000);assert.throws(()=>imageBounds(b),/40 million/);v.setUint32(16,300);v.setUint32(20,200);assert.deepEqual(imageBounds(b),{width:300,height:200})});
+test('bounds truncated JPEGs and random uploads',()=>{assert.throws(()=>imageBounds(new Uint8Array([255,216,255,192,255,255])));assert.throws(()=>imageBounds(new Uint8Array(40)))});

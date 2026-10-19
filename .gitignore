@@ -1,0 +1,16 @@
+/dist/
+/web/node_modules/
+/web/dist/
+/data/
+*.log
+.env
+.env.*
+
+/internal/webui/dist/
+*.exe
+*.test
+
+
+/web/test-results/
+/web/playwright-report/
+*.tsbuildinfo

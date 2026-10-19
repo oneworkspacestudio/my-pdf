@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "workspaceInstallerIntegration": 2,
+  "minimumWorkspaceVersion": "0.3.0-preview.37",
+  "repository": "oneworkspacestudio/my-pdf",
+  "app": "pdf",
+  "name": "My PDF",
+  "executable": "MyPDF.exe",
+  "version": "0.1.0-preview.1",
+  "route": "/pdf",
+  "callback": "/pdf/auth/callback",
+  "health": "/healthz",
+  "standalone": true,
+  "mainExecutableCount": 1,
+  "childProcesses": true,
+  "backup": "OWBACKUP1",
+  "dataFilesystem": "NTFS",
+  "runtimeDependencies": "Windows 10/11 x64 system libraries; modern browser"
+}

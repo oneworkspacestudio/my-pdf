@@ -1,0 +1,7 @@
+# Four-app delivery
+
+User authorizes implementation, local tests, org push and Windows preview release; no GitHub Actions. Original repository, Apache-2.0; shared apphost is pinned to the public immutable suite foundation c940d4319d21. GOWORK=off independent builds. Source/build/downloads on I:, protected disposable NTFS tests under one named C cache root. Owner live suite not used as test data.
+
+Implemented native API/embedded AUI React UI, original SVG/PNG/ICO branding, MyAccounts OIDC/standalone mode, consistent encrypted backup and suite integration. See API/operations/security/architecture documentation for limits. Local frontend/Go gates and standalone Chrome Playwright flow passed; PDF independently re-extracted redacted raster output with pypdf and verified original unchanged. Monitor maintenance/quiet/ack/status and Search source contracts/recents isolation have automated tests. Final independent packages, managed full-suite sign-in/Drive/search/restore checks and publication still pending. Preserve preview status and do not claim clean-machine/reboot certification.
+
+Release build script demands a clean commit, regenerates UI/icon, runs tests/vet and inventories full license texts, native artifact hashes and public foundation source. Do not use go.work or local module replacements for release. Browser tests use disposable credentials in environment, not source. Screenshots contain synthetic records only. Final release tags/URLs and final acceptance must be appended after actual publication.

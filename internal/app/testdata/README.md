@@ -1,0 +1,1 @@
+Original synthetic acceptance fixture. One Workspace test-only self-signed CMS detached signature; certificate trust is not claimed. Generated with a fresh in-memory RSA key which is discarded. No personal/user data.

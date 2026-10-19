@@ -1,0 +1,1 @@
+import{defineConfig}from'@playwright/test';export default defineConfig({testDir:'./e2e',workers:1,timeout:120000,use:{channel:'chrome',headless:true},outputDir:process.env.APP_E2E_OUTPUT||'test-results',reporter:'list'});
