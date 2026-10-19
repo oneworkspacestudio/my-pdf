@@ -70,3 +70,23 @@ coordinated One Workspace v0.3.0-preview.40, with local native builds, exact
 component hashes and verified release assets. No GitHub Actions. This follow-up
 authorizes publication; the owner live installation remains outside fixture
 testing and is not claimed upgraded by creating releases.
+
+## Published PDF preview.3
+
+Published [v0.1.0-preview.3](https://github.com/oneworkspacestudio/my-pdf/releases/tag/v0.1.0-preview.3) from `048d2c85b68353d594afea536c68e6d53f5c4b8d`.
+All11 remote asset sizes/SHA256 digests matched local native packages;
+the public anonymous ZIP was independently downloaded and hashed. Actions remain
+disabled. This supersedes the earlier pending-publication status.
+
+Coordinated Workspace40 exact release payload passed real native39-controller
+PDF-group update followed by the new40 installer/manager update. All ten managed
+browser cases passed on the actual published PDF binary, plus a final native
+smoke preserving a schema1 document's identity/bytes and explicitly saving it
+to Drive after migration. The prior ten-case harness's status text selector
+matched both the new completion alert and row; scoped it to the document list.
+No product binary changed for that selector correction.
+
+Stopped fixture, verified no task processes/reparse points and removed the exact
+release C root (870,265,529 bytes). Artifacts/evidence stay on I:.
+Owner installation unchanged; publication does not itself deploy into it. Suite
+release40 upload/publication is recorded in the suite history.
