@@ -15,6 +15,69 @@ export function PDF({ data, onAction }: { data: any; onAction: (name: string) =>
       {data.exporting && (
         <Button variant="secondary" onClick={() => onAction("cancelExport")} cancel={true}>Cancel browser export</Button>
       )}
+      {data.viewing && (
+        <Card>
+          <Row variant="pdf-toolbar">
+            <Button variant="secondary" onClick={() => onAction("previous")}>← Previous</Button>
+            <Text>{data.pageLabel}</Text>
+            <Button variant="secondary" onClick={() => onAction("next")}>Next →</Button>
+            <Select name="zoom" options={data.zooms} />
+            <Button variant="secondary" onClick={() => onAction("rotateView")}>Rotate view</Button>
+            <Button variant="secondary" onClick={() => onAction("print")}>Print / browser viewer</Button>
+          </Row>
+          <Row>
+            <Input name="pageNumber" type="number" min={1} max={data.pageCount} />
+            <Button variant="secondary" onClick={() => onAction("goPage")}>Go to page</Button>
+          </Row>
+          <Row variant="thumbnails">
+            {data.thumbnails.map((item, i) => (
+              <Button key={i} variant="thumbnail" item={item.page} onClick={() => onAction("match")}>
+                <Image src={item.src} alt={item.label} width={54} />
+                <Text>{item.label}</Text>
+              </Button>
+            ))}
+          </Row>
+          <Section id="pdf-canvas" />
+          <Row>
+            <Input name="find" placeholder="Find text in this PDF" />
+            <Button variant="secondary" onClick={() => onAction("find")}>Find</Button>
+            <Button variant="secondary" onClick={() => onAction("extractText")}>Extract text</Button>
+            <Button variant="secondary" onClick={() => onAction("image")}>Export page PNG</Button>
+          </Row>
+          <Row>
+            <Select name="tool" options={data.annotationTools} />
+            <Input name="annotationText" placeholder="Text / comment / stamp text" />
+            <Button variant="secondary" onClick={() => onAction("undoDrawing")}>Undo last mark on page</Button>
+            <Button variant="secondary" onClick={() => onAction("clearDrawings")}>Clear page marks</Button>
+          </Row>
+          <Field label="Stamp / signature image (PNG or JPEG)"><Input name="stampUpload" type="file" accept="image/png,image/jpeg" /></Field>
+          <Button variant="secondary" onClick={() => onAction("stampImage")}>Use stamp image</Button>
+          <Grid columns={4}>
+            <Field label="Mark X (0–1)"><Input name="markX" step={0.01} type="number" min={0} max={1} /></Field>
+            <Field label="Mark Y (0–1)"><Input name="markY" step={0.01} type="number" min={0} max={1} /></Field>
+            <Field label="Mark width (0–1)"><Input name="markW" step={0.01} type="number" min={0} max={1} /></Field>
+            <Field label="Mark height (0–1)"><Input name="markH" step={0.01} type="number" min={0} max={1} /></Field>
+          </Grid>
+          <Button variant="secondary" onClick={() => onAction("addMark")}>Add mark using coordinates</Button>
+          <Text variant="caption">Drag to draw a rectangle or ink; click for text/comments. Marks are saved per document and account. Black redaction previews become permanent only after Rasterise & redact.</Text>
+          <Row>
+            <Button onClick={() => onAction("saveAnnotations")}>Save annotated copy</Button>
+            <Button variant="danger" onClick={() => onAction("redact")}>Rasterise & redact</Button>
+            <Button variant="secondary" onClick={() => onAction("watermark")}>Watermark copy</Button>
+            <Button variant="secondary" onClick={() => onAction("screen")}>Compress: screen-quality copy</Button>
+            <Button variant="secondary" onClick={() => onAction("numbers")}>Number pages</Button>
+            <Button variant="secondary" onClick={() => onAction("metadata")}>Remove metadata copy</Button>
+            <Button variant="secondary" onClick={() => onAction("saveDrive")}>Save selected copy to Drive</Button>
+          </Row>
+          <Field label="Watermark text"><Input name="watermark" /></Field>
+          {data.textOutput && (
+            <Text variant="pre">{data.textOutput}</Text>
+          )}
+          {data.matches.map((item, i) => (
+            <Button key={i} variant="secondary" item={item.page} onClick={() => onAction("match")}>{item.label}</Button>
+          ))}
+        </Card>
+      )}
       <Grid columns={2}>
         <Card>
           <Heading level={2}>Documents</Heading>
@@ -38,69 +101,6 @@ export function PDF({ data, onAction }: { data: any; onAction: (name: string) =>
           <Text variant="caption">Annotated exports are flattened raster copies. Compression is lossless structural optimisation; scanned-image quality is preserved. OCR and Office conversion are not included.</Text>
         </Card>
       </Grid>
-      {data.viewing && (
-        <Card>
-          <Row variant="pdf-toolbar">
-            <Button variant="secondary" onClick={() => onAction("previous")}>← Previous</Button>
-            <Text>{data.pageLabel}</Text>
-            <Button variant="secondary" onClick={() => onAction("next")}>Next →</Button>
-            <Select name="zoom" options={data.zooms} />
-            <Button variant="secondary" onClick={() => onAction("rotateView")}>Rotate view</Button>
-            <Button variant="secondary" onClick={() => onAction("print")}>Print / browser viewer</Button>
-          </Row>
-          <Row>
-            <Input name="pageNumber" type="number" min={1} max={data.pageCount} />
-            <Button variant="secondary" onClick={() => onAction("goPage")}>Go to page</Button>
-          </Row>
-          <Row variant="thumbnails">
-            {data.thumbnails.map((item, i) => (
-              <Button key={i} variant="thumbnail" item={item.page} onClick={() => onAction("match")}>
-                <Image src={item.src} alt={item.label} width={54} />
-                <Text>{item.label}</Text>
-              </Button>
-            ))}
-          </Row>
-          <Row>
-            <Input name="find" placeholder="Find text in this PDF" />
-            <Button variant="secondary" onClick={() => onAction("find")}>Find</Button>
-            <Button variant="secondary" onClick={() => onAction("extractText")}>Extract text</Button>
-            <Button variant="secondary" onClick={() => onAction("image")}>Export page PNG</Button>
-          </Row>
-          <Row>
-            <Select name="tool" options={data.annotationTools} />
-            <Input name="annotationText" placeholder="Text / comment / stamp text" />
-            <Button variant="secondary" onClick={() => onAction("undoDrawing")}>Undo last mark on page</Button>
-            <Button variant="secondary" onClick={() => onAction("clearDrawings")}>Clear page marks</Button>
-          </Row>
-          <Field label="Stamp / signature image (PNG or JPEG)"><Input name="stampUpload" type="file" accept="image/png,image/jpeg" /></Field>
-          <Button variant="secondary" onClick={() => onAction("stampImage")}>Use stamp image</Button>
-          <Grid columns={4}>
-            <Field label="Mark X (0–1)"><Input name="markX" step={0.01} type="number" min={0} max={1} /></Field>
-            <Field label="Mark Y (0–1)"><Input name="markY" step={0.01} type="number" min={0} max={1} /></Field>
-            <Field label="Mark width (0–1)"><Input name="markW" step={0.01} type="number" min={0} max={1} /></Field>
-            <Field label="Mark height (0–1)"><Input name="markH" step={0.01} type="number" min={0} max={1} /></Field>
-          </Grid>
-          <Button variant="secondary" onClick={() => onAction("addMark")}>Add mark using coordinates</Button>
-          <Section id="pdf-canvas" />
-          <Text variant="caption">Drag to draw a rectangle or ink; click for text/comments. Marks are saved per document and account. Black redaction previews become permanent only after Rasterise & redact.</Text>
-          <Row>
-            <Button onClick={() => onAction("saveAnnotations")}>Save annotated copy</Button>
-            <Button variant="danger" onClick={() => onAction("redact")}>Rasterise & redact</Button>
-            <Button variant="secondary" onClick={() => onAction("watermark")}>Watermark copy</Button>
-            <Button variant="secondary" onClick={() => onAction("screen")}>Compress: screen-quality copy</Button>
-            <Button variant="secondary" onClick={() => onAction("numbers")}>Number pages</Button>
-            <Button variant="secondary" onClick={() => onAction("metadata")}>Remove metadata copy</Button>
-            <Button variant="secondary" onClick={() => onAction("saveDrive")}>Save selected copy to Drive</Button>
-          </Row>
-          <Field label="Watermark text"><Input name="watermark" /></Field>
-          {data.textOutput && (
-            <Text variant="pre">{data.textOutput}</Text>
-          )}
-          {data.matches.map((item, i) => (
-            <Button key={i} variant="secondary" item={item.page} onClick={() => onAction("match")}>{item.label}</Button>
-          ))}
-        </Card>
-      )}
       {data.driveOpen && (
         <Card>
           <Heading level={2}>My Drive picker</Heading>

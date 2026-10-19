@@ -9,27 +9,6 @@ Page PDF
   Alert "Original files are preserved. Annotations and drawing a signature do not create a cryptographically signed PDF. Processed copies can invalidate existing signatures."
   If condition=$exporting
     Button variant=secondary action=cancelExport cancel=true "Cancel browser export"
-  Grid columns=2
-    Card
-      Heading level=2 "Documents"
-      For each=$documents
-        Row
-          Button variant=secondary item=$item.id action=select $item.selection
-          Link href=$item.href $item.name
-          Text variant=caption $item.sizeLabel
-          Button variant=secondary item=$item.id action=open "Open"
-          Button variant=secondary item=$item.id action=removeDocument "Remove"
-    Card
-      Heading level=2 "Tools"
-      Select name=operation options=$operations
-      Field label="Pages (e.g. 1-3,5; reorder: 3,1,2)"
-        Input name=pages
-      Field label="Rotation degrees"
-        Select name=rotation options=$rotations
-      Field label="PDF password (used in memory for this operation only)"
-        Input name=pdfPassword type=password
-      Button action=process "Process selected PDFs"
-      Text variant=caption "Annotated exports are flattened raster copies. Compression is lossless structural optimisation; scanned-image quality is preserved. OCR and Office conversion are not included."
   If condition=$viewing
     Card
       Row variant=pdf-toolbar
@@ -47,6 +26,7 @@ Page PDF
           Button variant=thumbnail item=$item.page action=match
             Image src=$item.src alt=$item.label width=54
             Text $item.label
+      Section id=pdf-canvas
       Row
         Input name=find placeholder="Find text in this PDF"
         Button variant=secondary action=find "Find"
@@ -70,7 +50,6 @@ Page PDF
         Field label="Mark height (0–1)"
           Input name=markH step=0.01 type=number min=0 max=1
       Button variant=secondary action=addMark "Add mark using coordinates"
-      Section id=pdf-canvas
       Text variant=caption "Drag to draw a rectangle or ink; click for text/comments. Marks are saved per document and account. Black redaction previews become permanent only after Rasterise & redact."
       Row
         Button action=saveAnnotations "Save annotated copy"
@@ -86,6 +65,27 @@ Page PDF
         Text variant=pre $textOutput
       For each=$matches
         Button variant=secondary item=$item.page action=match $item.label
+  Grid columns=2
+    Card
+      Heading level=2 "Documents"
+      For each=$documents
+        Row
+          Button variant=secondary item=$item.id action=select $item.selection
+          Link href=$item.href $item.name
+          Text variant=caption $item.sizeLabel
+          Button variant=secondary item=$item.id action=open "Open"
+          Button variant=secondary item=$item.id action=removeDocument "Remove"
+    Card
+      Heading level=2 "Tools"
+      Select name=operation options=$operations
+      Field label="Pages (e.g. 1-3,5; reorder: 3,1,2)"
+        Input name=pages
+      Field label="Rotation degrees"
+        Select name=rotation options=$rotations
+      Field label="PDF password (used in memory for this operation only)"
+        Input name=pdfPassword type=password
+      Button action=process "Process selected PDFs"
+      Text variant=caption "Annotated exports are flattened raster copies. Compression is lossless structural optimisation; scanned-image quality is preserved. OCR and Office conversion are not included."
   If condition=$driveOpen
     Card
       Heading level=2 "My Drive picker"
